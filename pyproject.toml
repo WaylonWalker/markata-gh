@@ -1,32 +1,37 @@
 [build-system]
-requires = ["hatchling"]
+requires = [
+ "hatchling",
+]
 build-backend = "hatchling.build"
 
 [project]
 name = "markata-gh"
-description = ''
+description = ""
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
 keywords = []
-authors = [
-  { name = "Waylon S. Walker", email = "waylon@waylonwalker.com" },
-]
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+ "Development Status :: 4 - Beta",
+ "Programming Language :: Python",
+ "Programming Language :: Python :: 3.7",
+ "Programming Language :: Python :: 3.8",
+ "Programming Language :: Python :: 3.9",
+ "Programming Language :: Python :: 3.10",
+ "Programming Language :: Python :: 3.11",
+ "Programming Language :: Python :: Implementation :: CPython",
+ "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-'jinja2'
+ "markata",
+ "jinja2",
 ]
-dynamic = ["version"]
+dynamic = [
+ "version",
+]
+[[project.authors]]
+name = "Waylon S. Walker"
+email = "waylon@waylonwalker.com"
 
 [project.urls]
 Documentation = "https://github.com/WaylonWalker/markata-gh#readme"
@@ -36,28 +41,36 @@ Source = "https://github.com/WaylonWalker/markata-gh"
 [tool.hatch.version]
 path = "markata_gh/__about__.py"
 
-[tool.hatch.envs.default]
-dependencies = [
-  "pytest",
-  "pytest-cov",
-]
-[tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=markata_gh --cov=tests"
-no-cov = "cov --no-cov"
-
-[[tool.hatch.envs.test.matrix]]
-python = ["37", "38", "39", "310", "311"]
-
 [tool.coverage.run]
 branch = true
 parallel = true
 omit = [
-  "markata_gh/__about__.py",
+ "markata_gh/__about__.py",
 ]
 
 [tool.coverage.report]
 exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
+ "no cov",
+ "if __name__ == .__main__.:",
+ "if TYPE_CHECKING:",
 ]
+
+[tool.hatch.envs.default]
+dependencies = [
+ "pytest",
+ "pytest-cov",
+]
+
+[tool.hatch.envs.test]
+[[tool.hatch.envs.test.matrix]]
+python = [
+ "37",
+ "38",
+ "39",
+ "310",
+ "311",
+]
+
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=markata_gh --cov=tests"
+no-cov = "cov --no-cov"
