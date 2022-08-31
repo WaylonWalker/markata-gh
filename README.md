@@ -1,20 +1,28 @@
 # Markata gh
 
-[![PyPI - Version](https://img.shields.io/pypi/v/markata-gh.svg)](https://pypi.org/project/markata-gh)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/markata-gh.svg)](https://pypi.org/project/markata-gh)
-
------
-
-**Table of Contents**
-
-- [Installation](#installation)
-- [License](#license)
-
 ## Installation
 
 ```console
 pip install markata-gh
 ```
+ 
+## Usage
+
+`markta-gh` is a jinja plugin for markata, once installed it can be enabled through the following config.
+
+``` toml
+[markata.jinja_md]
+extensions = ['markata_gh.repo_list.GhRepoListTopic']
+```
+
+Inside your markdown you can use the `gh_repo_list_topic` tag.
+
+``` markdown
+## Markata plugins
+
+{% gh_repo_list_topic "markata" %}
+```
+
 
 ## License
 
