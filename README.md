@@ -23,6 +23,9 @@ Inside your markdown you can use the `gh_repo_list_topic` tag.
 {% gh_repo_list_topic "markata" %}
 ```
 
+## Example
+
+![image](https://user-images.githubusercontent.com/22648375/187774254-e9ebd2be-6ba2-4975-84fb-79132673d695.png)
 
 ## License
 
