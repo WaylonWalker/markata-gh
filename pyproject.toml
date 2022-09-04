@@ -91,14 +91,14 @@ cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=markat
 no-cov = "cov --no-cov"
 lint = "flake8 markata_gh"
 format = "black --check markata_gh"
-sort-imports = "isort markata"
+sort-imports = "isort markata_gh"
 build-docs = "markata build"
 test-lint = [
  "lint",
  "format",
  "seed-isort-config",
  "sort-imports",
- "cov",
+ # "cov",
 ]
 
 [project.entry-points."markata.jinja_md"]
