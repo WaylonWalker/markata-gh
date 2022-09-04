@@ -57,8 +57,23 @@ exclude_lines = [
 
 [tool.hatch.envs.default]
 dependencies = [
+ "black",
+ "flake8",
+ "isort",
  "pytest",
  "pytest-cov",
+ "seed-isort-config",
+]
+
+[tool.hatch.envs.dev]
+dependencies = [
+ "black",
+ "flake8",
+ "ipython",
+ "isort",
+ "pytest",
+ "pytest-cov",
+ "seed-isort-config",
 ]
 
 [tool.hatch.envs.test]
@@ -72,5 +87,23 @@ python = [
 ]
 
 [tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=markata_gh --cov=tests"
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=markata --cov=tests"
 no-cov = "cov --no-cov"
+lint = "flake8 markata_gh"
+format = "black --check markata_gh"
+sort-imports = "isort markata"
+build-docs = "markata build"
+test-lint = [
+ "lint",
+ "format",
+ "seed-isort-config",
+ "sort-imports",
+ "cov",
+]
+
+[project.entry-points."markata.jinja_md"]
+markta_gh = "markata_gh.repo_list:GhRepoListTopic"
+
+[tool.isort]
+profile = "black"
+known_third_party = ["jinja2"]
