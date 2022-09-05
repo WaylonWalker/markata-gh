@@ -36,17 +36,8 @@ def repo_md(username=None, topic=None):
     Get's markdown for repos within a github username and topic.
     """
     repos = repo_list(username, topic)
-    repo_html = "\n".join([REPO_CARD.render(**repo) for repo in repos])
-    return repo_html
-
-
-def get_value_from_arg(arg):
-    if isinstance(arg, jinja2.nodes.Name):
-        return arg.name
-    if isinstance(arg, jinja2.nodes.Const):
-        return arg.value
-    if isinstance(arg, jinja2.nodes.Sub):
-        return get_value_from_arg(arg.left) + "-" + get_value_from_arg(arg.right)
+    repo_md = "\n".join([REPO_CARD.render(**repo) for repo in repos])
+    return repo_md
 
 
 class GhRepoListTopic(Extension):
@@ -57,25 +48,21 @@ class GhRepoListTopic(Extension):
 
     def parse(self, parser):
         line_number = next(parser.stream).lineno
+        print(line_number)
         try:
             args = parser.parse_tuple().items
         except AttributeError:
             raise AttributeError(
                 "Invalid Syntax gh_repo_list_topic expects <username>, or <username>,<topic> both must have the comma"
             )
-        if len(args) == 1:
-            self.username = get_value_from_arg(args[0])
-            self.topic = ""
-        elif len(args) == 2:
-            self.username = get_value_from_arg(args[0])
-            self.topic = get_value_from_arg(args[1])
-        return nodes.CallBlock(self.call_method("run", []), [], [], "").set_lineno(
+
+        return nodes.CallBlock(self.call_method("run", args), [], [], "").set_lineno(
             line_number
         )
 
-    def run(self, caller):
+    def run(self, username, topic, caller):
         "get's markdown to inject into post"
-        return repo_md(username=self.username, topic=self.topic)
+        return repo_md(username=username, topic=topic)
 
 
 if __name__ == "__main__":
