@@ -40,6 +40,15 @@ def repo_md(username=None, topic=None):
     return repo_html
 
 
+def get_value_from_arg(arg):
+    if isinstance(arg, jinja2.nodes.Name):
+        return arg.name
+    if isinstance(arg, jinja2.nodes.Const):
+        return arg.value
+    if isinstance(arg, jinja2.nodes.Sub):
+        return get_value_from_arg(arg.left) + "-" + get_value_from_arg(arg.right)
+
+
 class GhRepoListTopic(Extension):
     tags = {"gh_repo_list_topic"}
 
@@ -55,11 +64,13 @@ class GhRepoListTopic(Extension):
                 "Invalid Syntax gh_repo_list_topic expects <username>, or <username>,<topic> both must have the comma"
             )
         if len(args) == 1:
-            self.username = args[0].name
+            self.username = get_value_from_arg(args[0])
             self.topic = ""
         elif len(args) == 2:
-            self.username = args[0].name
-            self.topic = args[1].name
+            self.username = get_value_from_arg(args[0])
+            self.topic = get_value_from_arg(args[1])
+        print(self.username)
+        print(self.topic)
         return nodes.CallBlock(self.call_method("run", []), [], [], "").set_lineno(
             line_number
         )
