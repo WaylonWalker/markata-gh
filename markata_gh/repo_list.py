@@ -69,8 +69,6 @@ class GhRepoListTopic(Extension):
         elif len(args) == 2:
             self.username = get_value_from_arg(args[0])
             self.topic = get_value_from_arg(args[1])
-        print(self.username)
-        print(self.topic)
         return nodes.CallBlock(self.call_method("run", []), [], [], "").set_lineno(
             line_number
         )
