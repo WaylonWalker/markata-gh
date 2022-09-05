@@ -48,7 +48,6 @@ class GhRepoListTopic(Extension):
 
     def parse(self, parser):
         line_number = next(parser.stream).lineno
-        print(line_number)
         try:
             args = parser.parse_tuple().items
         except AttributeError:
