@@ -59,7 +59,7 @@ class GhRepoListTopic(Extension):
             line_number
         )
 
-    def run(self, username=None, topic=None, caller):
+    def run(self, username=None, topic=None, caller=None):
         "get's markdown to inject into post"
         return repo_md(username=username, topic=topic)
 
