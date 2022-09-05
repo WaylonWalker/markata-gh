@@ -15,8 +15,14 @@ _Last Updated: {{ updatedAt }}_
 )
 
 
-def repo_list(topic=""):
-    cmd = f"gh repo list --topic {topic} --json name --json url --json updatedAt --json url --json stargazerCount --json issues --json description --json pullRequests --json homepageUrl".split()
+def repo_list(username=None, topic=None):
+    """
+    Gets list of repo data within a username and topic from the gh cli.
+    """
+    if topic:
+        cmd = f"gh repo list {username} --topic {topic} --json name --json url --json updatedAt --json url --json stargazerCount --json issues --json description --json pullRequests --json homepageUrl".split()
+    else:
+        cmd = f"gh repo list {username} --json name --json url --json updatedAt --json url --json stargazerCount --json issues --json description --json pullRequests --json homepageUrl".split()
     with subprocess.Popen(cmd, stdout=subprocess.PIPE) as proc:
         repos = json.loads(proc.stdout.read())
     proc.kill()
@@ -25,8 +31,11 @@ def repo_list(topic=""):
     return repos
 
 
-def repo_html(topic=""):
-    repos = repo_list(topic)
+def repo_md(username=None, topic=None):
+    """
+    Get's markdown for repos within a github username and topic.
+    """
+    repos = repo_list(username, topic)
     repo_html = "\n".join([REPO_CARD.render(**repo) for repo in repos])
     return repo_html
 
@@ -39,14 +48,26 @@ class GhRepoListTopic(Extension):
 
     def parse(self, parser):
         line_number = next(parser.stream).lineno
-        topic = [parser.parse_expression()]
-        return nodes.CallBlock(self.call_method("brun", topic), [], [], "").set_lineno(
+        try:
+            args = parser.parse_tuple().items
+        except AttributeError:
+            raise AttributeError(
+                "Invalid Syntax gh_repo_list_topic expects <username>, or <username>,<topic> both must have the comma"
+            )
+        if len(args) == 1:
+            self.username = args[0].name
+            self.topic = ""
+        elif len(args) == 2:
+            self.username = args[0].name
+            self.topic = args[1].name
+        return nodes.CallBlock(self.call_method("run", []), [], [], "").set_lineno(
             line_number
         )
 
-    def brun(self, topic, caller):
-        return repo_html(topic=topic)
+    def run(self, caller):
+        "get's markdown to inject into post"
+        return repo_md(username=self.username, topic=self.topic)
 
 
 if __name__ == "__main__":
-    print(repo_html("markata"))
+    print(repo_md("markata"))
